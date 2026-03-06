@@ -155,6 +155,7 @@ export default function DesignOne() {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const [activeFinish, setActiveFinish] = useState(0);
   const [cartOpen, setCartOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div
@@ -200,6 +201,24 @@ export default function DesignOne() {
         .nav-link:hover::after { width: 100%; }
         .btn-primary:hover { background: #E8600A !important; }
         .btn-dark:hover { background: #E8600A !important; }
+        @media (max-width: 768px) {
+          .mobile-menu-hidden { display: none; }
+          .mobile-menu-show { display: flex; }
+          .desktop-only { display: none; }
+          .mobile-only { display: flex; }
+          .product-add-btn { transform: translateY(0); }
+          .product-wish { opacity: 1; }
+          .product-card:active .product-img { transform: scale(0.95); }
+          .cat-card:active .cat-img { transform: scale(0.95); }
+          .finish-card:active .finish-img { transform: scale(0.95); }
+          .t-card:active { border-color: #E8600A !important; box-shadow: 4px 4px 0 #E8600A; }
+        }
+        @media (min-width: 769px) {
+          .mobile-menu-hidden { display: flex; }
+          .mobile-menu-show { display: none; }
+          .desktop-only { display: flex; }
+          .mobile-only { display: none; }
+        }
       `}</style>
 
       {/* ── ANNOUNCEMENT BAR ── */}
@@ -218,7 +237,7 @@ export default function DesignOne() {
 
       {/* ── NAV ── */}
       <nav
-        className="sticky top-0 z-49 flex items-center justify-between px-16 border-b"
+        className="sticky top-0 z-49 flex items-center justify-between px-4 md:px-16 border-b"
         style={{
           height: 68,
           background: "#FDFAF5",
@@ -230,8 +249,8 @@ export default function DesignOne() {
           <span style={{ color: "#E8600A" }}>A</span>SPIRE
         </a>
 
-        {/* Links */}
-        <ul className="flex gap-8 list-none m-0 p-0">
+        {/* Desktop Links */}
+        <ul className="desktop-only flex gap-8 list-none m-0 p-0">
           {navLinks.map((link) => (
             <li key={link}>
               <a
@@ -274,14 +293,49 @@ export default function DesignOne() {
           >
             Cart (0)
           </button>
+          
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="mobile-only p-1 transition-opacity hover:opacity-70" 
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="#2C2820" strokeWidth={1.5}>
+              {mobileMenuOpen ? (
+                <path d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path d="M3 12h18M3 6h18M3 18h18" />
+              )}
+            </svg>
+          </button>
         </div>
       </nav>
 
+      {/* Mobile Menu */}
+      <div className={`mobile-only ${mobileMenuOpen ? 'mobile-menu-show' : 'mobile-menu-hidden'} flex-col bg-white border-b`} style={{ borderColor: "#E8DDD0" }}>
+        <ul className="flex flex-col gap-4 p-4 list-none m-0">
+          {navLinks.map((link) => (
+            <li key={link}>
+              <a
+                href="#"
+                className="text-sm font-medium uppercase no-underline transition-colors duration-200 block py-2"
+                style={{ letterSpacing: "0.08em", color: "#2C2820" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#E8600A")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#2C2820")}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {/* ── HERO ── */}
-      <section className="grid" style={{ gridTemplateColumns: "1fr 1fr", minHeight: "88vh" }}>
+      <section className="grid md:grid-cols-2" style={{ minHeight: "88vh" }}>
         {/* Left — copy */}
         <div
-          className="flex flex-col justify-center relative px-20 py-20"
+          className="flex flex-col justify-center relative px-4 md:px-20 py-12 md:py-20 order-2 md:order-1"
           style={{ background: "#F5F0E8" }}
         >
           {/* Eyebrow */}
@@ -308,7 +362,7 @@ export default function DesignOne() {
 
           {/* Sub */}
           <p
-            className="animate-fade-up delay-400 mb-12 font-light leading-relaxed"
+            className="animate-fade-up delay-400 mb-6 font-light leading-relaxed"
             style={{ fontSize: 15, color: "#6B5F54", maxWidth: 380 }}
           >
             Premium tapware, fixtures, and accessories for bathrooms, kitchens,
@@ -316,7 +370,7 @@ export default function DesignOne() {
           </p>
 
           {/* CTAs */}
-          <div className="animate-fade-up delay-550 flex items-center gap-6">
+          <div className="animate-fade-up delay-550 flex items-center gap-6 mb-6">
             <button
               className="btn-primary text-xs font-medium uppercase px-9 py-4 transition-colors duration-200"
               style={{
@@ -348,19 +402,19 @@ export default function DesignOne() {
           </div>
 
           {/* Stats */}
-          <div className="absolute bottom-10 left-20 flex gap-10">
+          <div className="absolute bottom-4 left-4 md:bottom-10 md:left-20 flex gap-6 md:gap-10">
             {[
               ["12k+", "Happy Customers"],
               ["4.9★", "Google Rating"],
               ["AUS", "Free Ship $1k+"],
             ].map(([num, label]) => (
               <div key={label}>
-                <div className="font-display" style={{ fontSize: 30, fontWeight: 400, color: "#1A1612", lineHeight: 1 }}>
+                <div className="font-display" style={{ fontSize: 24, fontWeight: 400, color: "#1A1612", lineHeight: 1 }}>
                   {num}
                 </div>
                 <div
                   className="uppercase mt-1"
-                  style={{ fontSize: 10, letterSpacing: "0.15em", color: "#A89D94" }}
+                  style={{ fontSize: 9, letterSpacing: "0.15em", color: "#A89D94" }}
                 >
                   {label}
                 </div>
@@ -370,35 +424,35 @@ export default function DesignOne() {
         </div>
 
         {/* Right — image */}
-        <div className="relative overflow-hidden" style={{ background: "#E8DDD0" }}>
+        <div className="relative overflow-hidden order-1 md:order-2" style={{ background: "#E8DDD0", minHeight: "300px" }}>
           <ImagePlaceholder label="Lifestyle Photography" />
 
           {/* Floating product card */}
           <div
-            className="absolute bottom-10 right-10 bg-white p-5"
-            style={{ maxWidth: 200, boxShadow: "0 8px 32px rgba(44,40,32,0.12)" }}
+            className="absolute bottom-4 right-4 md:bottom-10 md:right-10 bg-white p-4 md:p-5"
+            style={{ maxWidth: "180px", boxShadow: "0 8px 32px rgba(44,40,32,0.12)" }}
           >
             <div
               className="uppercase mb-1.5"
-              style={{ fontSize: 10, letterSpacing: "0.15em", color: "#A89D94" }}
+              style={{ fontSize: 9, letterSpacing: "0.15em", color: "#A89D94" }}
             >
               Featured
             </div>
             <div
               className="font-display leading-snug mb-2"
-              style={{ fontSize: 15, fontWeight: 400, color: "#1A1612" }}
+              style={{ fontSize: 13, fontWeight: 400, color: "#1A1612" }}
             >
               Within Matte Black Towel Rail 750mm
             </div>
-            <div style={{ fontSize: 14, fontWeight: 500, color: "#E8600A" }}>$119.90</div>
+            <div style={{ fontSize: 13, fontWeight: 500, color: "#E8600A" }}>$119.90</div>
           </div>
         </div>
       </section>
 
       {/* ── CATEGORIES ── */}
-      <section className="px-20 pt-20">
+      <section className="px-4 md:px-20 pt-20">
         <div className="flex items-baseline justify-between mb-10">
-          <h2 className="font-display" style={{ fontSize: 38, fontWeight: 300, color: "#1A1612" }}>
+          <h2 className="font-display" style={{ fontSize: 28, fontWeight: 300, color: "#1A1612" }}>
             Shop by Room
           </h2>
           <a
@@ -418,7 +472,7 @@ export default function DesignOne() {
           </a>
         </div>
 
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {categories.map((cat) => (
             <div
               key={cat.name}
@@ -443,14 +497,14 @@ export default function DesignOne() {
       </section>
 
       {/* ── FEATURED PRODUCTS ── */}
-      <section className="px-20 py-24">
-        <div className="flex items-baseline justify-between mb-10">
-          <h2 className="font-display" style={{ fontSize: 38, fontWeight: 300, color: "#1A1612" }}>
+      <section className="px-4 md:px-20 py-12 md:py-24">
+        <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-10 gap-4">
+          <h2 className="font-display" style={{ fontSize: 28, fontWeight: 300, color: "#1A1612" }}>
             Top Selling Products
           </h2>
           <a
             href="#"
-            className="text-xs uppercase no-underline pb-0.5 transition-colors duration-200"
+            className="text-xs uppercase no-underline pb-0.5 transition-colors duration-200 self-start md:self-auto"
             style={{ letterSpacing: "0.1em", color: "#6B5F54", borderBottom: "1px solid #A89D94" }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = "#E8600A";
@@ -465,7 +519,7 @@ export default function DesignOne() {
           </a>
         </div>
 
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {products.map((p) => (
             <div
               key={p.id}
@@ -546,15 +600,15 @@ export default function DesignOne() {
       </section>
 
       {/* ── LIFESTYLE BANNER ── */}
-      <div className="mx-20 grid overflow-hidden" style={{ gridTemplateColumns: "1fr 1fr", minHeight: 500 }}>
+      <div className="mx-4 md:mx-20 grid md:grid-cols-2 overflow-hidden" style={{ minHeight: 400 }}>
         {/* Image side */}
-        <div className="relative overflow-hidden" style={{ background: "#2C2820" }}>
+        <div className="relative overflow-hidden" style={{ background: "#2C2820", minHeight: "300px" }}>
           <ImagePlaceholder label="Midnight Collection" />
         </div>
 
         {/* Copy side */}
         <div
-          className="flex flex-col justify-center px-16 py-16"
+          className="flex flex-col justify-center px-8 md:px-16 py-12 md:py-16"
           style={{ background: "#2C2820" }}
         >
           <div
@@ -566,7 +620,7 @@ export default function DesignOne() {
           </div>
           <h2
             className="font-display mb-5 leading-tight"
-            style={{ fontSize: 48, fontWeight: 300, color: "#F5F0E8" }}
+            style={{ fontSize: 32, fontWeight: 300, color: "#F5F0E8" }}
           >
             Tapware that<br />
             <em className="italic" style={{ color: "#E8DDD0" }}>
@@ -574,14 +628,14 @@ export default function DesignOne() {
             </em>
           </h2>
           <p
-            className="mb-10 font-light leading-loose"
+            className="mb-8 font-light leading-loose"
             style={{ fontSize: 14, color: "#A89D94" }}
           >
             Our signature matte black and brushed brass finishes bring drama and
             sophistication to any space. Engineered to last — designed to impress.
           </p>
           <button
-            className="self-start text-xs font-medium uppercase px-9 py-4 transition-colors duration-200"
+            className="self-start text-xs font-medium uppercase px-8 py-3 transition-colors duration-200"
             style={{
               letterSpacing: "0.1em",
               background: "#E8600A",
@@ -599,14 +653,14 @@ export default function DesignOne() {
       </div>
 
       {/* ── SHOP BY FINISH ── */}
-      <section className="px-20 py-24" style={{ background: "#F5F0E8" }}>
-        <div className="flex items-baseline justify-between mb-12">
-          <h2 className="font-display" style={{ fontSize: 38, fontWeight: 300, color: "#1A1612" }}>
+      <section className="px-4 md:px-20 py-12 md:py-24" style={{ background: "#F5F0E8" }}>
+        <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-12 gap-4">
+          <h2 className="font-display" style={{ fontSize: 28, fontWeight: 300, color: "#1A1612" }}>
             Shop by Finish
           </h2>
           <a
             href="#"
-            className="text-xs uppercase no-underline pb-0.5 transition-colors duration-200"
+            className="text-xs uppercase no-underline pb-0.5 transition-colors duration-200 self-start md:self-auto"
             style={{ letterSpacing: "0.1em", color: "#6B5F54", borderBottom: "1px solid #A89D94" }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = "#E8600A";
@@ -621,7 +675,7 @@ export default function DesignOne() {
           </a>
         </div>
 
-        <div className="grid grid-cols-4" style={{ gap: 2 }}>
+        <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 2 }}>
           {finishes.map((f, i) => (
             <div
               key={f.name}
@@ -665,14 +719,14 @@ export default function DesignOne() {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="px-20 py-24">
-        <div className="flex items-baseline justify-between mb-12">
-          <h2 className="font-display" style={{ fontSize: 38, fontWeight: 300, color: "#1A1612" }}>
+      <section className="px-4 md:px-20 py-12 md:py-24">
+        <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-12 gap-4">
+          <h2 className="font-display" style={{ fontSize: 28, fontWeight: 300, color: "#1A1612" }}>
             From Our Community
           </h2>
           <a
             href="#"
-            className="text-xs uppercase no-underline pb-0.5 transition-colors duration-200"
+            className="text-xs uppercase no-underline pb-0.5 transition-colors duration-200 self-start md:self-auto"
             style={{ letterSpacing: "0.1em", color: "#6B5F54", borderBottom: "1px solid #A89D94" }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = "#E8600A";
@@ -687,16 +741,16 @@ export default function DesignOne() {
           </a>
         </div>
 
-        <div className="grid gap-20 items-center" style={{ gridTemplateColumns: "1fr 1fr" }}>
+        <div className="grid md:grid-cols-2 gap-8 md:gap-20 items-center">
           {/* Cards */}
           <div className="flex flex-col gap-5">
             {testimonials.map((t) => (
               <div
                 key={t.name}
-                className="t-card bg-white px-8 py-7"
+                className="t-card bg-white px-6 md:px-8 py-6 md:py-7"
                 style={{ border: "1px solid #E8DDD0" }}
               >
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-3 gap-2">
                   <div>
                     <span style={{ fontSize: 14, fontWeight: 500, color: "#1A1612" }}>{t.name}</span>
                     <span className="ml-2" style={{ fontSize: 11, color: "#A89D94" }}>{t.location}</span>
@@ -716,13 +770,13 @@ export default function DesignOne() {
               <ImagePlaceholder label="Community Photo" />
             </div>
             <div
-              className="absolute top-8 font-display italic"
+              className="absolute top-4 md:top-8 font-display italic"
               style={{
-                left: -20,
+                left: -10,
                 background: "#E8600A",
                 color: "white",
-                padding: "14px 24px",
-                fontSize: 18,
+                padding: "12px 20px",
+                fontSize: 14,
                 fontWeight: 300,
               }}
             >
@@ -734,11 +788,11 @@ export default function DesignOne() {
 
       {/* ── NEWSLETTER ── */}
       <div
-        className="px-20 py-20 grid items-center gap-20"
-        style={{ background: "#2C2820", gridTemplateColumns: "1fr 1fr" }}
+        className="px-4 md:px-20 py-12 md:py-20 grid md:grid-cols-2 items-center gap-12 md:gap-20"
+        style={{ background: "#2C2820" }}
       >
         <div>
-          <h2 className="font-display leading-tight" style={{ fontSize: 42, fontWeight: 300, color: "#F5F0E8" }}>
+          <h2 className="font-display leading-tight" style={{ fontSize: 32, fontWeight: 300, color: "#F5F0E8" }}>
             Join the{" "}
             <em className="italic" style={{ color: "#E8DDD0" }}>
               Aspire
@@ -750,11 +804,11 @@ export default function DesignOne() {
             delivered straight to your inbox.
           </p>
         </div>
-        <div className="flex">
+        <div className="flex flex-col sm:flex-row">
           <input
             type="email"
             placeholder="Enter your email address"
-            className="flex-1 outline-none"
+            className="flex-1 outline-none mb-3 sm:mb-0"
             style={{
               background: "rgba(255,255,255,0.07)",
               border: "1px solid rgba(255,255,255,0.12)",
@@ -790,12 +844,12 @@ export default function DesignOne() {
       <footer style={{ background: "#1A1612", color: "#A89D94" }}>
         {/* Top grid */}
         <div
-          className="grid gap-16 px-20 py-16 border-b"
-          style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr", borderColor: "rgba(255,255,255,0.06)" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-16 px-4 md:px-20 py-12 md:py-16 border-b"
+          style={{ borderColor: "rgba(255,255,255,0.06)" }}
         >
           {/* Brand */}
           <div>
-            <div className="font-display uppercase mb-4" style={{ fontSize: 24, fontWeight: 300, letterSpacing: "0.12em", color: "#F5F0E8" }}>
+            <div className="font-display uppercase mb-4" style={{ fontSize: 20, fontWeight: 300, letterSpacing: "0.12em", color: "#F5F0E8" }}>
               <span style={{ color: "#E8600A" }}>A</span>SPIRE
             </div>
             <p className="font-light leading-relaxed" style={{ fontSize: 13, maxWidth: 250 }}>
@@ -837,9 +891,9 @@ export default function DesignOne() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex items-center justify-between px-20 py-6">
+        <div className="flex flex-col md:flex-row items-center justify-between px-4 md:px-20 py-6 gap-4">
           <span style={{ fontSize: 12, fontWeight: 300 }}>
-            © 2026 Aspire Bathrooms. All rights reserved. All prices in AUD.
+            &copy; 2026 Aspire Bathrooms. All rights reserved. All prices in AUD.
           </span>
           <div className="flex gap-5">
             {["Instagram", "Pinterest", "Facebook"].map((s) => (
